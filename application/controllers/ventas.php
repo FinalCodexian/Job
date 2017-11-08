@@ -10,7 +10,10 @@ class Ventas extends CI_Controller {
   }
 
   public function record_ventas(){
-    echo $this->m_ventas->record();
+    $data = array(
+      'mes' => $this->input->post('mes')
+    );
+    echo $this->m_ventas->record($data);
   }
 
 }

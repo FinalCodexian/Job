@@ -34,7 +34,7 @@ $this->load->view('header', $data);
 
     <div class="ui mini action stackable input">
       <label class="ui label">Mes de Record&nbsp;
-        <select class="ui mini selection dropdown">
+        <select class="ui mini selection dropdown" id="mes">
           <?php
           $meses = [
             1 => "enero", 2 => "febrero", 3 => "marzo", 4 => "abril",
@@ -74,6 +74,11 @@ $(function() {
       "T/C",
       "TARJETA MN",
       "TARJETA US",
+
+      "VENTA MN",
+      "VENTA A US",
+      "VENTA US"
+
     ],
     contextMenu: true,
     columns: [
@@ -119,15 +124,45 @@ $(function() {
         //className: 'htCenter'
       },
 
+      {
+        data: 'venta_mn',
+        readOnly: true,
+        type: 'numeric',
+        format: '0,0.00',
+        allowEmpty: false
+        //className: 'htCenter'
+      },
+      {
+        data: 'ventaMN_a_us',
+        readOnly: true,
+        type: 'numeric',
+        format: '0,0.00',
+        allowEmpty: false
+        //className: 'htCenter'
+      },
+
+      {
+        data: 'venta_us',
+        readOnly: true,
+        type: 'numeric',
+        format: '0,0.00',
+        allowEmpty: false
+        //className: 'htCenter'
+      },
+
     ],
     columnSorting: true,
     fillHandle: false
   });
 
   $("#btnGenerar").on("click",function(){
+    var $mes = $("#mes").val();
+  
     HoldOn.open({ theme:"sk-bounce" });
 
-    $.post('<?=site_url("ventas/record_ventas");?>',{}, function(res) {
+    $.post('<?=site_url("ventas/record_ventas");?>',{
+      mes: $mes
+    }, function(res) {
       var data = JSON.parse(res);
       hot.loadData(data);
       hot.render();
