@@ -52,6 +52,9 @@ $this->load->view('header', $data);
     </div>
   </div>
 
+  <button class="ui button" id="excel">Exportar a Excel</button>
+  <hr>
+
   <div id="tabla"></div>
 
 </div>
@@ -83,22 +86,26 @@ $(function() {
     contextMenu: true,
     columns: [
       {
+
         data: 'agencia',
         readOnly: true,
         className: 'htCenter'
       },
       {
         data: 'fecha',
+        type: 'text',
         dateFormat: 'DD/MM/YYYY',
         readOnly: true,
         className: 'htCenter'
       },
       {
+        ancho: 8,
         data: 'reporte_num',
         readOnly: true,
         className: 'htCenter'
       },
       {
+        ancho: 8,
         data: 'tc',
         readOnly: true,
         type: 'numeric',
@@ -107,6 +114,7 @@ $(function() {
       },
 
       {
+        ancho: 10,
         data: 'tarjeta_mn',
         readOnly: true,
         type: 'numeric',
@@ -116,6 +124,7 @@ $(function() {
       },
 
       {
+        ancho: 10,
         data: 'tarjeta_a_us',
         readOnly: true,
         type: 'numeric',
@@ -125,6 +134,7 @@ $(function() {
       },
 
       {
+        ancho: 10,
         data: 'venta_mn',
         readOnly: true,
         type: 'numeric',
@@ -133,6 +143,7 @@ $(function() {
         //className: 'htCenter'
       },
       {
+        ancho: 10,
         data: 'ventaMN_a_us',
         readOnly: true,
         type: 'numeric',
@@ -142,6 +153,7 @@ $(function() {
       },
 
       {
+        ancho: 10,
         data: 'venta_us',
         readOnly: true,
         type: 'numeric',
@@ -157,7 +169,7 @@ $(function() {
 
   $("#btnGenerar").on("click",function(){
     var $mes = $("#mes").val();
-  
+
     HoldOn.open({ theme:"sk-bounce" });
 
     $.post('<?=site_url("ventas/record_ventas");?>',{
@@ -171,10 +183,42 @@ $(function() {
 
   })
 
+  $("#excel").on("click",function(){
+
+    var $columnas = [], datos = hot.getColHeader();
+    $.each(datos, function(k, v){
+      $columnas.push({
+        item:k,
+        title: hot.getColHeader(k),
+        type: hot.getDataType(0,k,0,k),
+        ancho: hot.getCellMeta(0,k).ancho,
+        className: hot.getCellMeta(0,k).className
+      });
+    });
+
+    $.ajax({
+      method:"POST",
+      url:"<?=site_url("ventas/excel");?>",
+      data: {
+        columnas: $columnas,
+        contenido: hot.getData()
+      },
+      dataType: "json"
+    }).done(function(data){
+      var $a = $("<a>");
+      $a.attr("href",data.file);
+      $("body").append($a);
+      $a.attr("download","Archivo.xls");
+      $a[0].click();
+      $a.remove();
+    });
+
+  })
+
 
 });
 </script>
-
+<div id="excel_result"></div>
 <?php
 $this->load->view('footer');
 ?>
