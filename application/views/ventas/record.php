@@ -208,7 +208,7 @@ $(function() {
       var $a = $("<a>");
       $a.attr("href",data.file);
       $("body").append($a);
-      $a.attr("download","Archivo.xls");
+      $a.attr("download","Archivo.xlsx");
       $a[0].click();
       $a.remove();
     });

@@ -184,7 +184,7 @@ class Ventas extends CI_Controller {
     $spreadsheet->getActiveSheet()->setSelectedCell('A1');
     /* end: contenido */
 
-    $objWriter = new PHPExcel_Writer_Excel5($spreadsheet);
+    $objWriter = new PHPExcel_Writer_Excel2007($spreadsheet);
     $objWriter->save('php://output');
     $xlsData = ob_get_contents();
     ob_end_clean();
